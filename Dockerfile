@@ -25,3 +25,11 @@ RUN ijsinstall
 RUN echo "require('ts-node').register();" > /home/${NB_USER}/.ijsstart.js
 
 ENV IJSSTARTUP=/home/${NB_USER}/.ijsstart.js
+
+ENV DENO_INSTALL="/home/${NB_USER}/.deno"
+ENV PATH="${DENO_INSTALL}/bin:${PATH}"
+
+RUN curl -fsSL https://deno.land/install.sh | sh
+
+# Install Deno Jupyter kernel non-interactively
+RUN deno jupyter --unstable --install
