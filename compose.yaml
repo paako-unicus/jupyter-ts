@@ -1,0 +1,16 @@
+services:
+  jupyter-ts:
+    image: jupyter-ts
+    container_name: jupyter-ts
+    ports:
+      - "127.0.0.1:8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./jupyter-settings:/home/jovyan/.jupyter/lab/user-settings
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=
+      - JUPYTER_PASSWORD=
+      - RESTARTABLE=yes
+    command: start-notebook.py --IdentityProvider.token=''
+    restart: unless-stopped
