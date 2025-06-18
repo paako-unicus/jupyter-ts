@@ -12,5 +12,5 @@ services:
       - JUPYTER_TOKEN=
       - JUPYTER_PASSWORD=
       - RESTARTABLE=yes
-    command: start-notebook.py --IdentityProvider.token=''
+    command: start-notebook.py --IdentityProvider.token='' --ServerApp.root_dir=/home/jovyan/work
     restart: unless-stopped
