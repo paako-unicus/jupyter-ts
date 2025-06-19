@@ -18,7 +18,7 @@ RUN mamba install --yes nodejs=20.* && \
 
 # hadolint ignore=DL3016
 RUN npm install -g ijavascript typescript ts-node @types/node && \
-    pip install --no-cache-dir jupyterlab-code-formatter black
+    pip install --no-cache-dir jupyterlab-code-formatter black isort
 # hadolint ignore=DL3059
 RUN ijsinstall
 RUN echo "require('ts-node').register();" > /home/${NB_USER}/.ijsstart.js
@@ -33,17 +33,21 @@ RUN curl -fsSL https://deno.land/install.sh | sh
 # Install Deno Jupyter kernel for proper Jupyter TypeScript experience
 RUN deno jupyter --unstable --install
 
-# Install some formatter plugins
-RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter && \
-    jupyter serverextension enable --py jupyterlab_code_formatter
-ENV JUPYTERLAB_CODE_FORMATTER_FORMATTERS="{ \
-    \"python\": [\"black\"], \
-    \"javascript\": [\"prettier\", \"--parser\", \"babel\"], \
-    \"typescript\": [\"prettier\", \"--parser\", \"typescript\"] \
-}"
 # Copy configuration files for code formatting (well, prettier anyway)
 COPY .prettierrc /home/${NB_USER}/.prettierrc
-RUN chown ${NB_USER}:${NB_USER} /home/${NB_USER}/.prettierrc
+COPY prettier_formatter.py /home/${NB_USER}/formatters/prettier_formatter.py
+COPY jupyter_server_config.py /home/${NB_USER}/.jupyter/jupyter_server_config.py
+
+USER root
+RUN chown ${NB_USER}:${NB_GROUP} /home/${NB_USER}/.prettierrc && \
+    chown -R ${NB_USER}:${NB_GROUP} /home/${NB_USER}/work/ && \
+    #chown -R ${NB_USER}:${NB_GROUP} /home/${NB_USER}/.jupyter/lab/ && \
+    chown -R ${NB_USER}:${NB_GROUP} /home/${NB_USER}/formatters/ && \
+    chown ${NB_USER}:${NB_GROUP} /home/${NB_USER}/.jupyter/jupyter_server_config.py && \
+    chmod +x /home/${NB_USER}/formatters/prettier_formatter.py
+USER ${NB_UID}
+
+ENV PYTHONPATH="/home/${NB_USER}/formatters/:${PYTHONPATH}"
 
 RUN fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}" && \
