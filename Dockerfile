@@ -17,7 +17,7 @@ RUN mamba install --yes nodejs=20.* && \
     mamba clean --all -f -y
 
 # hadolint ignore=DL3016
-RUN npm install -g ijavascript typescript ts-node @types/node && \
+RUN npm install -g ijavascript typescript ts-node @types/node prettier && \
     pip install --no-cache-dir jupyterlab-code-formatter black isort
 # hadolint ignore=DL3059
 RUN ijsinstall

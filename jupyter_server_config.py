@@ -1833,11 +1833,10 @@ c = get_config()  #noqa
 # c.ZMQChannelsWebsocketConnection.session = None
 
 c.ServerApp.jpserver_extensions = {
-    "jupyterlab_code_formatter": True,
     "prettier_formatter": True,
 }
 
-c.JupyterLabCodeFormatter.formatters = {
-    "javascript": ["prettier_formatter.PrettierFormatter"],
-    "typescript": ["prettier_formatter.PrettierFormatter"],
-}
+# c.JupyterLabCodeFormatter.formatters = {
+#     "javascript": ["prettier_formatter.PrettierFormatter"],
+#     "typescript": ["prettier_formatter.PrettierFormatter"],
+# }

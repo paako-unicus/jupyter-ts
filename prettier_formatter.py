@@ -1,29 +1,26 @@
-import subprocess
-from jupyterlab_code_formatter.formatters import BaseFormatter, handle_line_ending_and_magic, SERVER_FORMATTERS
+from jupyterlab_code_formatter.formatters import (
+    SERVER_FORMATTERS as BASE_FORMATTERS,
+    CommandLineFormatter,
+)
 
-class PrettierFormatter(BaseFormatter):
-    label = "Apply Prettier Formatter"
-    language = ["javascript", "typescript"]
-    aliases = ["prettier"]
+# Base class that uses `--stdin-filepath` to help Prettier determine the parser
+class BasePrettierFormatter(CommandLineFormatter):
+    def __init__(self, file_extension: str):
+        super().__init__(command=["prettier", "--stdin-filepath", f"dummy.{file_extension}"])
 
     @property
-    def importable(self) -> bool:
-        return True
+    def label(self) -> str:
+        return "Apply Prettier Formatter"
 
-    @handle_line_ending_and_magic
-    def format_code(self, code: str, notebook: bool, **options) -> str:
-        try:
-            process = subprocess.run(
-                ["prettier", "--stdin-filepath", "file.ts"],
-                input=code.encode("utf-8"),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                check=True,
-            )
-            return process.stdout.decode("utf-8")
-        except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Prettier failed: {e.stderr.decode('utf-8')}")
+
+# Extend the base set of formatters
+SERVER_FORMATTERS = BASE_FORMATTERS.copy()
+SERVER_FORMATTERS.update({
+    "prettier": BasePrettierFormatter("ts"),  # default if you want it
+    "javascript": BasePrettierFormatter("js"),
+    "typescript": BasePrettierFormatter("ts"),
+})
 
 def _load_jupyter_server_extension(server_app):
-    #server_app.log.info("prettier_formatter | extension loaded successfully.")
+    #server_app.log.info("[prettier_formatter] Loaded Prettier formatters.")
     pass
