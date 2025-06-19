@@ -1836,7 +1836,7 @@ c.ServerApp.jpserver_extensions = {
     "prettier_formatter": True,
 }
 
-# c.JupyterLabCodeFormatter.formatters = {
-#     "javascript": ["prettier_formatter.PrettierFormatter"],
-#     "typescript": ["prettier_formatter.PrettierFormatter"],
-# }
+c.JupyterLabCodeFormatter.formatters = {
+    "javascript": ["prettier_formatter.JSPrettierFormatter"],
+    "typescript": ["prettier_formatter.TSPrettierFormatter"],
+}
