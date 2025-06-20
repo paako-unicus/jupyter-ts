@@ -1,2 +1,6 @@
-jupyter-settings/*
-notebooks/*
+# Ignore contents of these folders, but keep the folders themselves
+/notebooks/*
+/jupyter-settings/*
+
+!/notebooks/.gitkeep
+!/jupyter-settings/.gitkeep
