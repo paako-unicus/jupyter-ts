@@ -9,8 +9,6 @@ services:
       - ./jupyter-settings:/home/jovyan/.jupyter/lab/user-settings
     environment:
       - JUPYTER_ENABLE_LAB=yes
-      - JUPYTER_TOKEN=
-      - JUPYTER_PASSWORD=
       - RESTARTABLE=yes
     command: start-notebook.py --IdentityProvider.token='' --ServerApp.root_dir=/home/jovyan/work
     restart: unless-stopped
